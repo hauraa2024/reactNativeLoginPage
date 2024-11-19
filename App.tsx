@@ -1,66 +1,24 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
+  TextInput,
+  TouchableOpacity,
   View,
+  useColorScheme,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? '#121212' : '#F5F5F5',
+    flex: 1,
   };
+
+  const [isLogin, setIsLogin] = useState(true);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -68,51 +26,105 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
+      <View style={styles.container}>
+        {isLogin ? (
+          <LoginScreen switchToRegister={() => setIsLogin(false)} />
+        ) : (
+          <RegisterScreen switchToLogin={() => setIsLogin(true)} />
+        )}
+      </View>
     </SafeAreaView>
   );
 }
 
+const LoginScreen = ({switchToRegister}: {switchToRegister: () => void}) => {
+  return (
+    <View style={styles.formContainer}>
+      <Text style={styles.title}>Login</Text>
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Login</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={switchToRegister}>
+        <Text style={styles.switchText}>Gak Punya akun?? Register</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const RegisterScreen = ({switchToLogin}: {switchToLogin: () => void}) => {
+  return (
+    <View style={styles.formContainer}>
+      <Text style={styles.title}>Register</Text>
+      <TextInput style={styles.input} placeholder="Name" />
+      <TextInput style={styles.input} placeholder="Email" keyboardType="email-address" />
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry />
+      <TouchableOpacity style={styles.button}>
+        <Text style={styles.buttonText}>Register</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={switchToLogin}>
+        <Text style={styles.switchText}>Already have an account? Login</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
-  sectionTitle: {
+  formContainer: {
+    alignItems: 'center',
+    backgroundColor: '#282828',
+    padding: 20,
+    borderRadius: 10,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+  },
+  title: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    color: '#fcba03',
   },
-  sectionDescription: {
-    marginTop: 8,
+  input: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    borderColor: '#DDD',
+    borderWidth: 1,
+  },
+  button: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: '#FFF',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: 'bold',
   },
-  highlight: {
-    fontWeight: '700',
+  switchText: {
+    color: '#007aff',
+    marginTop: 10,
+    textAlign: 'center',
   },
 });
+
+
 
 export default App;
